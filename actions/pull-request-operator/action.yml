@@ -18,26 +18,21 @@ inputs:
   repository_origin_owner:
     description: "The owner of the repository"
     required: true
-    type: string
   repository_origin_name:
     description: "The name of the repository"
     required: true
-    type: string
   repository_upstream_owner:
     description: "The owner of the repository"
     required: true
-    type: string
   repository_upstream_name:
     description: "The name of the repository"
     required: true
-    type: string
   repository_default_branch:
     description: "The default branch name of the repository"
     required: true
-    type: string
-  GITHUB_PAT:
+  github_pat:
+    description: "Token to use"
     required: true
-    type: string
 
 runs:
   using: "composite"
@@ -47,9 +42,10 @@ runs:
       with:
         repository: ${{ inputs.repository_origin_owner }}/${{ inputs.repository_origin_name }}
         path: origin_repository
-        token: ${{ inputs.GITHUB_PAT }}
+        token: ${{ inputs.github_pat }}
     - name: Origin - Sync with upstream
       working-directory: origin_repository
+      shell: sh
       run: |
         git remote add upstream https://github.com/${{ inputs.repository_upstream_owner }}/${{ inputs.repository_upstream_name }}.git
         git fetch upstream                     
@@ -57,6 +53,7 @@ runs:
         git reset --hard upstream/${{ inputs.repository_default_branch }}
         git push origin ${{ inputs.repository_default_branch }} -f
     - name: Origin - prepare branch for PR
+      shell: sh
       run: |
         export branch_name = ${{ inputs.operator_name }}-${{ inputs.operator_version }}
 
@@ -79,6 +76,7 @@ runs:
         branch: ${{ inputs.operator_name }}-${{ inputs.operator_version }}
         commit_message: "Release operator ${{ inputs.operator_version }}"
     - name: Create PR in upstream
+      shell: sh
       run: |
         curl -o pr-body.md ${{ inputs.pr_body_template_url }}
         export PR_BODY_FILE=$(readlink -f pr-body.md)
@@ -90,4 +88,4 @@ runs:
         -t "operator ${{ inputs.operator_name }} (${{ inputs.operator_version }})" \
         -F $PR_BODY_FILE
       env:
-        GH_TOKEN: ${{ inputs.GITHUB_PAT }}
+        GH_TOKEN: ${{ inputs.github_pat }}
