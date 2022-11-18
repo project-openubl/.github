@@ -74,8 +74,9 @@ runs:
       with:
         working-directory: origin_repository
         branch: ${{ inputs.operator_name }}-${{ inputs.operator_version }}
-        commit_message: "Release operator ${{ inputs.operator_version }}"
+        commit_message: "🏁 Releasing ${{ inputs.operator_name }} ${{ inputs.operator_version }}"
     - name: Create PR in upstream
+      working-directory: origin_repository
       shell: sh
       run: |
         curl -o pr-body.md ${{ inputs.pr_body_template_url }}
