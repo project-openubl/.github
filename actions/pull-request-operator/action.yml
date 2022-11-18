@@ -83,7 +83,7 @@ runs:
         export PR_BODY_FILE=$(readlink -f pr-body.md)
 
         gh pr create \
-        -H ${{ inputs.repository_origin_owner }}:${{ inputs.operator_version }} \
+        -H ${{ inputs.repository_origin_owner }}:${{ inputs.operator_name }}-${{ inputs.operator_version }} \
         -R ${{ inputs.repository_upstream_owner }}/${{ inputs.repository_upstream_name }} \
         -B ${{ inputs.repository_default_branch }} \
         -t "operator ${{ inputs.operator_name }} (${{ inputs.operator_version }})" \
