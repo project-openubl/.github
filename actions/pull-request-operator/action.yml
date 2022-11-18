@@ -35,9 +35,9 @@ inputs:
     description: "The default branch name of the repository"
     required: true
     type: string
-secrets:
   GITHUB_PAT:
     required: true
+    type: string
 
 runs:
   using: "composite"
@@ -47,7 +47,7 @@ runs:
       with:
         repository: ${{ inputs.repository_origin_owner }}/${{ inputs.repository_origin_name }}
         path: origin_repository
-        token: ${{ secrets.GITHUB_PAT }}
+        token: ${{ inputs.GITHUB_PAT }}
     - name: Origin - Sync with upstream
       working-directory: origin_repository
       run: |
@@ -90,4 +90,4 @@ runs:
         -t "operator ${{ inputs.operator_name }} (${{ inputs.operator_version }})" \
         -F $PR_BODY_FILE
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_PAT }}
+        GH_TOKEN: ${{ inputs.GITHUB_PAT }}
