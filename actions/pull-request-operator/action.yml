@@ -55,7 +55,7 @@ runs:
     - name: Origin - prepare branch for PR
       shell: sh
       run: |
-        export branch_name = ${{ inputs.operator_name }}-${{ inputs.operator_version }}
+        export branch_name=${{ inputs.operator_name }}-${{ inputs.operator_version }}
 
         cd origin_repository
         git fetch origin
